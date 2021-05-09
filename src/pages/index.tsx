@@ -47,7 +47,7 @@ export default function IndexPage() {
       <section className="pb-4">
         <h2 className="font-bold text-3xl text-gray-700">The Shoppies</h2>
       </section>
-      <section className="pb-4">
+      <section className="flex flex-col flex-grow pb-4">
         <SearchBar onSearchHandler={onSearchHandler} />
       </section>
     </main>
