@@ -32,7 +32,7 @@ interface JSONSuccess {
 }
 
 class OMDB {
-  private readonly baseUrl = 'http://www.omdbapi.com/?i=tt3896198&';
+  private readonly baseUrl = 'https://www.omdbapi.com/?i=tt3896198&';
   private readonly queryParams: URLSearchParams;
 
   public constructor() {
