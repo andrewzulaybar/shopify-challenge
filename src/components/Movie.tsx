@@ -1,7 +1,9 @@
-import { useMemo } from 'react';
+import { notification } from 'antd';
+import { useCallback, useMemo } from 'react';
 
 import { DispatchAction, useMoviesContext } from '../contexts/MoviesContext';
 import { MovieDTO } from '../services/OMDBService';
+import { MAXIMUM_MOVIES_TO_NOMINATE } from '../utils/constants';
 
 interface Props {
   movie: MovieDTO;
@@ -36,13 +38,54 @@ export default function Movie(props: Props) {
     ].join(' ');
   };
 
-  const onAddNomination = (movie: MovieDTO) => {
-    dispatch({ type: DispatchAction.ADD_NOMINATION, payload: { movie } });
-  };
+  const onAddNomination = useCallback(
+    (movie: MovieDTO) => {
+      dispatch({ type: DispatchAction.ADD_NOMINATION, payload: { movie } });
+    },
+    [dispatch]
+  );
 
-  const onRemoveNomination = (movie: MovieDTO) => {
-    dispatch({ type: DispatchAction.REMOVE_NOMINATION, payload: { movie } });
-  };
+  const onRemoveNomination = useCallback(
+    (movie: MovieDTO) => {
+      dispatch({ type: DispatchAction.REMOVE_NOMINATION, payload: { movie } });
+    },
+    [dispatch]
+  );
+
+  const notify = useCallback((numNominees: number) => {
+    if (numNominees === MAXIMUM_MOVIES_TO_NOMINATE) {
+      notification.success({
+        message: "You're done!",
+        description: `You have chosen the maximum number of ${MAXIMUM_MOVIES_TO_NOMINATE} nominated movies. 
+          Navigate to the Nominations page to manage your list.`,
+        duration: 10,
+      });
+    } else if (numNominees > MAXIMUM_MOVIES_TO_NOMINATE) {
+      notification.error({
+        message: 'You have too many nominees!',
+        description: `You have chosen more than the maximum number of ${MAXIMUM_MOVIES_TO_NOMINATE} nominated movies. 
+          Navigate to the Nominations page to manage your list.`,
+        duration: 10,
+      });
+    }
+  }, []);
+
+  const onClickHandler = useCallback(() => {
+    if (isNominated) {
+      onRemoveNomination(props.movie);
+      notify(state.nominated.size - 1);
+    } else {
+      onAddNomination(props.movie);
+      notify(state.nominated.size + 1);
+    }
+  }, [
+    isNominated,
+    notify,
+    onAddNomination,
+    onRemoveNomination,
+    props.movie,
+    state.nominated.size,
+  ]);
 
   return (
     <div className="p-4 rounded-xl w-full">
@@ -53,14 +96,7 @@ export default function Movie(props: Props) {
         />
       </div>
       <div className="description w-full">
-        <button
-          onClick={() =>
-            isNominated
-              ? onRemoveNomination(props.movie)
-              : onAddNomination(props.movie)
-          }
-          className={buttonClasses()}
-        >
+        <button onClick={onClickHandler} className={buttonClasses()}>
           {isNominated ? 'Nominated' : 'Nominate'}
         </button>
         <h2 className="leading-6 mb-0 text-lg">{props.movie.Title}</h2>

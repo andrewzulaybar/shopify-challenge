@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import NominatedList from '../components/NominatedList';
 import { DispatchAction, useMoviesContext } from '../contexts/MoviesContext';
 import { MovieDTO } from '../services/OMDBService';
+import { MAXIMUM_MOVIES_TO_NOMINATE } from '../utils/constants';
 
 export default function NominationsPage() {
   const { state, dispatch } = useMoviesContext();
@@ -44,8 +45,7 @@ export default function NominationsPage() {
     setModified(new Set());
   };
 
-  const maximumMoviesToNominate = 5;
-  const moviesLeftToNominate = maximumMoviesToNominate - movieList.length;
+  const moviesLeftToNominate = MAXIMUM_MOVIES_TO_NOMINATE - movieList.length;
 
   let message = `You have ${moviesLeftToNominate} more ${
     moviesLeftToNominate === 1 ? 'movie' : 'movies'
@@ -75,8 +75,8 @@ export default function NominationsPage() {
           )}
         </div>
         <p className="text-sm">
-          Manage the list of movies you believe should be up for nomination. You
-          can have a <strong>maximum of 5 nominees</strong>. {message}
+          {`Manage the list of movies you want to nominate.
+          You can have a maximum of ${MAXIMUM_MOVIES_TO_NOMINATE} nominees. ${message}`}
         </p>
       </div>
       <NominatedList

@@ -1,0 +1,1 @@
+export const MAXIMUM_MOVIES_TO_NOMINATE = 5;
