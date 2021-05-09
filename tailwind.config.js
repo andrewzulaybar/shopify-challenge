@@ -3,7 +3,11 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx}',
     './src/pages/**/*.{js,ts,jsx,tsx}',
   ],
-  theme: {},
+  theme: {
+    fontFamily: {
+      sans: ['Avenir'],
+    },
+  },
   variants: {},
   plugins: [],
 };

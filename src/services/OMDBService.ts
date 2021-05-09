@@ -20,13 +20,18 @@ export interface Query {
   year?: number;
 }
 
-interface JSONResponse {
+interface JSONError {
+  Error: string;
+  Response: string;
+}
+
+interface JSONSuccess {
   Response: string;
   Search: MovieDTO[];
   totalResults: string;
 }
 
-export default class OMDB {
+class OMDB {
   private readonly baseUrl = 'http://www.omdbapi.com/?i=tt3896198&';
   private readonly queryParams: URLSearchParams;
 
@@ -36,12 +41,12 @@ export default class OMDB {
     });
   }
 
-  public async findMovie(query: Query) {
+  public async findMovies(query: Query) {
     const apiUrl = this.constructApiUrl(query);
     return fetch(apiUrl)
       .then((res: Response) => res.json())
-      .then((res: JSONResponse) => res.Search)
-      .catch(() => []);
+      .then((res: JSONSuccess) => res.Search)
+      .catch((err: JSONError) => Promise.reject(err));
   }
 
   private constructApiUrl(query: Query): string {
@@ -71,3 +76,5 @@ export default class OMDB {
     return this.baseUrl + params.toString();
   }
 }
+
+export default new OMDB();
