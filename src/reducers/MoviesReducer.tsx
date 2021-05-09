@@ -27,9 +27,9 @@ export default function MoviesReducer(
      * Adds the given movie to the list of nominated movies
      */
     case DispatchAction.ADD_NOMINATION: {
-      const { id } = payload as { id: string };
+      const { movie } = payload as { movie: MovieDTO };
       const nominated = new Set(nextState.nominated);
-      nominated.add(id);
+      nominated.add(movie);
       nextState = updateState(nextState, { nominated });
       break;
     }
@@ -71,9 +71,18 @@ export default function MoviesReducer(
      * Removes the given movie from the list of nominated movies
      */
     case DispatchAction.REMOVE_NOMINATION: {
-      const { id } = payload as { id: string };
+      const { movie } = payload as { movie: MovieDTO };
       const nominated = new Set(nextState.nominated);
-      nominated.delete(id);
+      nominated.delete(movie);
+      nextState = updateState(nextState, { nominated });
+      break;
+    }
+    /**
+     * Updates the list of nominated movies to be the given list of movies
+     */
+    case DispatchAction.UPDATE_NOMINATIONS: {
+      const { movies } = payload as { movies: MovieDTO[] };
+      const nominated = new Set(movies);
       nextState = updateState(nextState, { nominated });
       break;
     }

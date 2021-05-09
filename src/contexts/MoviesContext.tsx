@@ -20,6 +20,8 @@ export enum DispatchAction {
   DATA_SUCCESS,
   // Removes the movie from the list of nominated movies
   REMOVE_NOMINATION,
+  // Updates the list of nominated movies
+  UPDATE_NOMINATIONS,
 }
 
 export interface State {
@@ -29,8 +31,8 @@ export interface State {
   isLoading: boolean;
   // The entire list of fetched movies
   movies: MovieDTO[];
-  // The set of IMDB ids of the nominated movies
-  nominated: Set<string>;
+  // The set of nominated movies
+  nominated: Set<MovieDTO>;
 }
 
 export interface DispatchParams {
@@ -47,7 +49,7 @@ const initialState: State = {
   hasError: false,
   isLoading: false,
   movies: [],
-  nominated: new Set<string>(),
+  nominated: new Set<MovieDTO>(),
 };
 
 const MoviesContext = createContext<MoviesContext>({

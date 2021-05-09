@@ -1,16 +1,20 @@
+import { useMemo } from 'react';
+
 import { DispatchAction, useMoviesContext } from '../contexts/MoviesContext';
+import { MovieDTO } from '../services/OMDBService';
 
-type MovieProps = {
-  id: string;
-  imgUrl: string;
-  title: string;
-  year: string;
-};
+interface Props {
+  movie: MovieDTO;
+}
 
-export default function Movie(props: MovieProps) {
+export default function Movie(props: Props) {
   const { state, dispatch } = useMoviesContext();
 
-  const isNominated = state.nominated.has(props.id);
+  const isNominated = useMemo(() => {
+    return Array.from(state.nominated).some(
+      (movie) => movie.imdbID === props.movie.imdbID
+    );
+  }, [props.movie.imdbID, state.nominated]);
 
   const buttonClasses = () => {
     const buttonClasses = 'border-2 font-semibold mb-2 p-1 rounded-2xl w-full';
@@ -32,28 +36,35 @@ export default function Movie(props: MovieProps) {
     ].join(' ');
   };
 
-  const onAddNomination = (id: string) => {
-    dispatch({ type: DispatchAction.ADD_NOMINATION, payload: { id } });
+  const onAddNomination = (movie: MovieDTO) => {
+    dispatch({ type: DispatchAction.ADD_NOMINATION, payload: { movie } });
+  };
+
+  const onRemoveNomination = (movie: MovieDTO) => {
+    dispatch({ type: DispatchAction.REMOVE_NOMINATION, payload: { movie } });
   };
 
   return (
     <div className="p-4 rounded-xl w-full">
       <div className="mb-4">
         <img
-          src={props.imgUrl}
+          src={props.movie.Poster}
           className="h-64 object-cover rounded-lg w-full"
         />
       </div>
       <div className="description w-full">
         <button
-          onClick={() => onAddNomination(props.id)}
+          onClick={() =>
+            isNominated
+              ? onRemoveNomination(props.movie)
+              : onAddNomination(props.movie)
+          }
           className={buttonClasses()}
-          disabled={isNominated}
         >
           {isNominated ? 'Nominated' : 'Nominate'}
         </button>
-        <h2 className="leading-6 mb-0 text-lg">{props.title}</h2>
-        <p className="text-sm text-gray-400">{props.year}</p>
+        <h2 className="leading-6 mb-0 text-lg">{props.movie.Title}</h2>
+        <p className="text-sm text-gray-400">{props.movie.Year}</p>
       </div>
     </div>
   );
