@@ -31,6 +31,13 @@ body {
   border-radius: 20px;
 }
 
+.movie .ant-skeleton-element,
+.ant-skeleton-element .ant-skeleton-image.movie-poster,
+img.movie-poster {
+  height: 16rem;
+  width: 100%;
+}
+
 .search-bar input.ant-input {
   @apply border-gray-300;
   padding: 8px 16px;

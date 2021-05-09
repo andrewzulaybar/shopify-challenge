@@ -1,6 +1,7 @@
 import { notification } from 'antd';
 import { useCallback, useMemo } from 'react';
 
+import MoviePoster from './MoviePoster';
 import { DispatchAction, useMoviesContext } from '../contexts/MoviesContext';
 import { MovieDTO } from '../services/OMDBService';
 import { MAXIMUM_MOVIES_TO_NOMINATE } from '../utils/constants';
@@ -88,13 +89,8 @@ export default function Movie(props: Props) {
   ]);
 
   return (
-    <div className="p-4 rounded-xl w-full">
-      <div className="mb-4">
-        <img
-          src={props.movie.Poster}
-          className="h-64 object-cover rounded-lg w-full"
-        />
-      </div>
+    <div className="movie p-4 rounded-xl w-full">
+      <MoviePoster imgUrl={props.movie.Poster} />
       <div className="description w-full">
         <button onClick={onClickHandler} className={buttonClasses()}>
           {isNominated ? 'Nominated' : 'Nominate'}

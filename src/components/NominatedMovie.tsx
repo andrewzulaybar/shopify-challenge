@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react';
 
+import MoviePoster from './MoviePoster';
 import { MovieDTO } from '../services/OMDBService';
 
 interface NominatedMovieProps {
@@ -42,13 +43,8 @@ export default function NominatedMovie(props: NominatedMovieProps) {
   }, [isNominated, props]);
 
   return (
-    <div className="w-full rounded-xl p-4">
-      <div className="mb-4">
-        <img
-          src={props.movie.Poster}
-          className="movie-poster object-cover rounded-lg"
-        />
-      </div>
+    <div className="movie w-full rounded-xl p-4">
+      <MoviePoster imgUrl={props.movie.Poster} />
       <div className="description w-full">
         <button onClick={onClickHandler} className={buttonClasses}>
           {isNominated ? 'Remove' : 'Nominate'}
