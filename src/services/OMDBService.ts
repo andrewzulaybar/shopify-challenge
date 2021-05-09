@@ -41,7 +41,7 @@ class OMDB {
     });
   }
 
-  public async findMovies(query: Query): Promise<MovieDTO[]> {
+  public async findMovies(query: Query): Promise<JSONSuccess> {
     const apiUrl = this.constructApiUrl(query);
     return fetch(apiUrl)
       .then((res: Response) => res.json())
@@ -49,11 +49,15 @@ class OMDB {
         const msg = (res as JSONError).Error;
         if (msg) {
           if (msg === 'Movie not found!') {
-            return [];
+            return {
+              Response: msg,
+              Search: [],
+              totalResults: '0',
+            };
           }
           return Promise.reject(new Error(msg));
         }
-        return (res as JSONSuccess).Search;
+        return res as JSONSuccess;
       })
       .catch((err: JSONError) => Promise.reject(err));
   }
