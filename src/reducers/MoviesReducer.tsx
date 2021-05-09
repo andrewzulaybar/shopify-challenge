@@ -24,6 +24,16 @@ export default function MoviesReducer(
 
   switch (type) {
     /**
+     * Adds the given movie to the list of nominated movies
+     */
+    case DispatchAction.ADD_NOMINATION: {
+      const { id } = payload as { id: string };
+      const nominated = new Set(nextState.nominated);
+      nominated.add(id);
+      nextState = updateState(nextState, { nominated });
+      break;
+    }
+    /**
      * Sets `isLoading` to false, `hasError` to true, and `movies` to given array if provided
      */
     case DispatchAction.DATA_FAILURE: {
@@ -55,6 +65,16 @@ export default function MoviesReducer(
         movies,
       };
       nextState = updateState(nextState, newValues);
+      break;
+    }
+    /**
+     * Removes the given movie from the list of nominated movies
+     */
+    case DispatchAction.REMOVE_NOMINATION: {
+      const { id } = payload as { id: string };
+      const nominated = new Set(nextState.nominated);
+      nominated.delete(id);
+      nextState = updateState(nextState, { nominated });
       break;
     }
   }

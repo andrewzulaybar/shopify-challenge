@@ -10,12 +10,16 @@ import MoviesReducer from '../reducers/MoviesReducer';
 import { MovieDTO } from '../services/OMDBService';
 
 export enum DispatchAction {
+  // Adds the movie to the list of nominated movies
+  ADD_NOMINATION,
   // Error occurred while fetching movie data
   DATA_FAILURE,
   // Loading the movie data from the API
   DATA_LOAD,
   // Successfully fetched the movie data
   DATA_SUCCESS,
+  // Removes the movie from the list of nominated movies
+  REMOVE_NOMINATION,
 }
 
 export interface State {
@@ -25,6 +29,8 @@ export interface State {
   isLoading: boolean;
   // The entire list of fetched movies
   movies: MovieDTO[];
+  // The set of IMDB ids of the nominated movies
+  nominated: Set<string>;
 }
 
 export interface DispatchParams {
@@ -41,6 +47,7 @@ const initialState: State = {
   hasError: false,
   isLoading: false,
   movies: [],
+  nominated: new Set<string>(),
 };
 
 const MoviesContext = createContext<MoviesContext>({
